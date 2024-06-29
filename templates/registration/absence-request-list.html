@@ -1,0 +1,108 @@
+{% extends 'registration/base.html' %}
+
+{% load jalali_tags %}
+
+{% block title %}
+
+فهرست کارمند ها
+{% endblock  %}
+
+
+{% block main %}
+
+
+<div class="row">
+  <div class="card">
+    <div class="card-header text-center d-flex justify-content-center">
+        <h3 class="card-title">جدول اطلاعات تعداد مرخصی های کاربر</h3>
+    </div>
+    
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                <th >شماره</th>
+                <th > نام کارمند </th>
+                <th > نام پدر </th>
+                <th > تاریخ </th>
+                <th > مدت </th>
+                <th > وضعیت </th>
+                <th >پاسخ به درخواست </th>
+                {% if not  request.user.is_superuser  and  employee.status == 'w'  %}
+                <th >حذف </th>
+                {% endif %}
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for employee in object_list %}
+                
+                
+                    <tr>
+                    <td> {{forloop.counter}}.</td>
+
+                    {% if request.user.is_superuser %}
+                        <td> <a href="{% url "accounts:absence-request-update" employee.user.id employee.year employee.month employee.day %}">{{employee.user.get_full_name}}({{employee.user.username}}) </a> </td>
+                    {% else %}
+                        <td> {{employee.user.get_full_name}}({{employee.user.username}})  </td>
+                    {% endif %}
+
+                    <td> {{employee.user.father_name}}  </td>
+                    <td> {{employee.year}}/{{employee.month}}/{{employee.day}}  </td>
+                    <td> {{employee.absence_length}}  </td>
+                  
+                  
+                    <td> 
+                        {% if employee.status == 'w' %}
+                        <p class="alert alert-warning">
+                            در انتظار تایید
+                        </p>
+                        {% elif employee.status == 'a' %}
+                        <p class="alert alert-success">
+                            تایید شده
+                        </p>
+                        
+                        {% else %}
+ 
+                     
+                        <p class="alert alert-danger">
+                            رد شده
+                        </p>
+                        {% endif %}
+                    </td>
+                    <td> 
+                      
+                        {{employee.status_message}}
+                      
+                     </td>
+                     {% if not request.user.is_superuser  and  employee.status == 'w'  %}
+                     <td> 
+                        <form method="POST" action="{% url "accounts:absence-request-delete" employee.pk  %}">
+                            {% csrf_token %}<input type="submit" value="حذف">
+                         </form>
+                        {% comment %} <a href="{% url "accounts:absence-request-delete" employee.pk  %}">حذف</a> {% endcomment %}
+                        
+                     </td>
+                    {% endif %}
+{% comment %}                  
+                    <td><span class="badge bg-danger">{{employee.remaining_absence}}</span></td>
+                    <td><span class="badge bg-danger">{{ employee.user.date_joined|to_jalali:'%Y/%m/%d' }}</span></td>
+                     {% endcomment %}
+                    
+                    
+                    </tr>
+                
+            </tbody>
+            {% empty %}
+                <td class="text-center" colspan=4> هنوز اطلاعاتی ثبت نشده است</td>
+            {% endfor %}
+            
+
+        </table>
+    </div>
+    
+    
+</div>
+  </div>
+
+{% endblock  %}

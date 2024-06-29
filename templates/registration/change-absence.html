@@ -1,0 +1,66 @@
+{% extends 'registration/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+{% load jalali_tags %}
+
+
+
+{% block web_title %}  به روز رسانی مرخصی {% endblock web_title %}
+
+{% block container_title %} به روز رسانی مرخصی{% endblock %}
+{%block main%}
+
+
+{% if messages %}
+<div class="alert alert-success" role="alert">
+    
+    <ul  >
+        {% for message in messages %}
+        <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+        {% endfor %}
+    </ul>
+    
+  </div>
+{% endif %}
+
+<form method="post" enctype= "multipart/form-data"  >{% csrf_token %}
+   
+    {% if  form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{form.errors}}
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-4">
+            {{ form.user|as_crispy_field }}
+        </div>
+        <div class="col-4">
+            {{ form.year|as_crispy_field }}
+        </div>
+        
+    </div>
+    <div class="row">
+        
+            <div class="col-12">
+                {{ form.remaining_absence|as_crispy_field }}
+            </div>
+                      
+    </div>
+    
+
+ 		
+
+    <div class="row mx-1 d-flex justify-content-center">
+    
+   
+    <input class="btn bg-success col-3 mx-1" type="submit" value="ذخیره">
+    
+           
+    </div>
+    
+    
+    
+</form>
+
+{% endblock %}

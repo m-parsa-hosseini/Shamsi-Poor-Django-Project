@@ -1,0 +1,70 @@
+{% load static %}
+{% load base_tags %}
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <!-- Brand Logo -->
+  <a href="{% url 'accounts:profile' %}" class="brand-link">
+    <img src="{%static 'registration/admin-lte/assets/img/AdminLTELogo.png'%}" alt="Logo" class="brand-image img-circle elevation-3"
+         style="opacity: .8">
+    <span class="brand-text font-weight-light">AdminLTE 3</span>
+  </a>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel  d-flex p-3">
+      
+
+        <svg xmlns="http://www.w3.org/2000/svg" style="width:20%" fill="currentColor" class="bi bi-person-circle text-light" viewBox="0 0 16 16">
+          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+          <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+          </svg>
+        
+      
+      <div class="info">
+        <a href="{%url 'accounts:profile' %}" class="d-block">{{request.user.get_full_name}}({{ request.user.username  }})</a>
+      </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+             with font-awesome or any other icon font library -->
+
+            
+
+        
+             {% comment %} {% link request "profile" "پروفایل" "fa-user" %} {% endcomment %}
+             {% if request.user.is_superuser %}
+              {% autoescape off %}
+              {% custom_li  request "home" "accounts:home" request.resolver_match.url_name  "خانه" "fa fa-home" %}
+              {% endautoescape %}
+             {% endif %}
+           
+           
+        <li class="nav-header">حساب کاربری</li>
+
+        
+          {% comment %} {% link request "profile" "پروفایل" "fa-user" %} {% endcomment %}
+          {% autoescape off %}
+          {% custom_li  request "profile" "accounts:profile" request.resolver_match.url_name  "پروفایل" "fa-user" %}
+          {% endautoescape %}
+
+
+          {% autoescape off %}
+          {% custom_li  request "absence-request" "accounts:absence-request" request.resolver_match.url_name  "درخواست مرخصی" "fa fa-plus" %}
+          {% endautoescape %}
+
+
+
+          {% autoescape off %}
+          {% custom_li  request "absence-request-list" "accounts:absence-request-list" request.resolver_match.url_name  "لیست درخواست های مرخصی" "fa fa-list" %}
+          {% endautoescape %}
+        </li>
+        
+      </ul>
+    </nav>
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
+</aside>

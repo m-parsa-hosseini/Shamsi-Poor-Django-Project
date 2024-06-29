@@ -1,0 +1,80 @@
+{% extends 'registration/base.html' %}
+
+{% load jalali_tags %}
+
+{% block title %}
+
+فهرست کارمند ها
+{% endblock  %}
+
+
+{% block main %}
+
+
+<div class="row">
+  <div class="card">
+    <div class="card-header text-center d-flex justify-content-center">
+        <h3 class="card-title">جدول اطلاعات تعداد مرخصی های کاربر</h3>
+    </div>
+    
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                <th >#</th>
+                <th >نام کارمند</th>
+                <th >نام پدر</th>
+                <th >کد ملی</th>
+                <th >کد کارمندی</th>
+                <th >تلفن ثابت</th>
+                <th >شماره تلفن</th>
+                
+
+                <th>وضعیت مرخصی</th>
+                <th>سال</th>
+                <th >تعداد مرخصی باقی مانده </th>
+                <th >تاریخ استخدام شدن  </th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for employee in object_list %}
+                
+                {% if employee.user.username != "admin" %}
+                    <tr>
+                    <td> {{forloop.counter}}.</td>
+                    <td> <a href="{% url "accounts:user-change-info" employee.user.id %}">{{employee.user.get_full_name}}({{employee.user.username}}) </a> </td>
+                    <td> {{employee.user.father_name}}  </td>
+                    <td> {{employee.user.national_code}} </td>
+                    <td> {{employee.user.pesonal_code}} </td>
+                    <td> {{employee.user.telephone}} </td>
+                    <td> {{employee.user.phone}} </td>
+                    
+
+                    <td>{% if employee.remaining_absence < 1 %}فاقد مرخصی {% else %} دارای مرخصی {% endif %}</td>
+                    <td>
+                        <div class="progress">
+                            {{employee.year}}
+                        </div>
+                    </td>
+                    <td><span class="badge bg-danger">{{employee.remaining_absence}}</span></td>
+                    <td><span class="badge bg-danger">{{ employee.user.date_joined|to_jalali:'%Y/%m/%d' }}</span></td>
+                    
+                    
+                    
+                    </tr>
+                {% endif %}
+            </tbody>
+            {% empty %}
+                <td class="text-center" colspan=4> هنوز اطلاعاتی ثبت نشده است</td>
+            {% endfor %}
+            
+
+        </table>
+    </div>
+    
+    
+</div>
+  </div>
+
+{% endblock  %}

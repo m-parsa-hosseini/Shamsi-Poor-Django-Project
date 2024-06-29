@@ -1,0 +1,13 @@
+
+{% comment %} blog/templatetag/basetags.py {% endcomment %}
+<li class="nav-item">
+<a href="{% url link %}" class="nav-link 
+
+{% if request.resolver_match.url_name == link_name %}
+    active
+    {% endif %}
+">
+    <i class="far {{classes}} nav-icon "></i>
+    <p>{{content}}</p>
+</a>
+</li>

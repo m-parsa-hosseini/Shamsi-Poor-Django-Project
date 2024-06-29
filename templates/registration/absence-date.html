@@ -1,0 +1,71 @@
+{% extends 'registration/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+{% load jalali_tags %}
+
+
+
+{% block web_title %}  تاریخ مرخصی ها {% endblock web_title %}
+
+{% block container_title %} تاریخ مرخصی ها {% endblock %}
+{%block main%}
+
+
+{% if messages %}
+<div class="alert alert-success" role="alert">
+    
+    <ul  >
+        {% for message in messages %}
+        <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+        {% endfor %}
+    </ul>
+    
+  </div>
+{% endif %}
+
+
+
+    <div class="card">
+        <div class="card-header text-center d-flex justify-content-center">
+            <h3 class="card-title">جدول اطلاعات تاریخ مرخصی های کاربر</h3>
+        </div>
+        
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                    <th >#</th>
+                    <th>تاریخ</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for absence in object_list %}
+                    <tr>
+                    <td> {{forloop.counter}}.</td>
+                    <td> 
+                        {{absence.absence_date|to_jalali:'%Y/%m/%d'}}
+                    </td>
+                                     
+                    
+                    </tr>
+                    
+                </tbody>
+                {% empty %}
+                    <td class="text-center" colspan=4> هنوز اطلاعاتی ثبت نشده است</td>
+                {% endfor %}
+                
+
+            </table>
+        </div>
+        
+        
+    </div> 
+
+
+
+
+
+
+{% endblock %}

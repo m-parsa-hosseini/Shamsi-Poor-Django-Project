@@ -1,0 +1,235 @@
+{% extends 'registration/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+{% load jalali_tags %}
+
+
+
+{% block web_title %}  پروفایل {% endblock web_title %}
+
+{% block container_title %} پروفایل {% endblock %}
+{%block main%}
+
+
+{% if messages %}
+<div class="alert alert-success" role="alert">
+    
+    <ul  >
+        {% for message in messages %}
+        <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+        {% endfor %}
+    </ul>
+    
+  </div>
+{% endif %}
+
+<form method="post" enctype= "multipart/form-data"  >{% csrf_token %}
+   
+    {% if  form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{form.errors}}
+        </div>
+    {% endif %}
+    
+    {% if request.user.is_superuser %}
+    <div class="col-12">
+        {{ form.username|as_crispy_field }}
+    </div>
+    {% endif %}
+    <div class="row">
+        
+            <div class="col-4">
+                {{ form.first_name|as_crispy_field }}
+            </div>
+            <div class="col-4">
+                {{ form.last_name|as_crispy_field }}
+            </div>
+            <div class="col-4">
+                {{ form.father_name|as_crispy_field }}
+            </div>
+            
+    </div>
+    
+
+ 
+   
+    
+    <div class="row">
+        <div class="col-3">
+            {{ form.telephone|as_crispy_field }}
+        </div>
+        <div class="col-3">
+            {% comment %} {{ form.email|as_crispy_field }} {% endcomment %}
+            {{ form.phone|as_crispy_field }}
+        </div>
+        <div class="col-3">
+            {{ form.pesonal_code|as_crispy_field }}
+        </div>
+        <div class="col-3">
+            {{ form.national_code|as_crispy_field }}
+        </div>
+        
+        
+    </div>
+    <div class="row">
+        <div class="col-12">
+            {{ form.address|as_crispy_field }}
+        </div>
+        
+        
+        
+    </div>
+
+
+
+
+
+
+
+
+
+    <div class="card">
+        <div class="card-header text-center d-flex justify-content-center">
+            <h3 class="card-title">جدول اطلاعات تعداد مرخصی های کاربر</h3>
+        </div>
+        
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                    <th >#</th>
+                    <th>وضعیت مرخصی</th>
+                    <th>سال</th>
+                    <th style="">تعداد مرخصی باقی مانده </th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for employee in absence %}
+                    <tr>
+                    <td> {{forloop.counter}}.</td>
+                    <td> 
+                      
+                        {% if employee.remaining_absence < 1 %}فاقد مرخصی {% else %} دارای مرخصی {% endif %}
+                        
+                    </td>
+                    <td>
+                        <div class="year">
+                            <a href="{% url "accounts:absence-date" user.id employee.year %}">
+                                {{employee.year}}
+                            </a>
+                            
+                            
+                        </div>
+                    </td>
+                    <td><span class="">
+                        {% if request.user.is_superuser %} 
+                        <a href="{% url "accounts:absence-change" user.id employee.year %}">
+                            {{employee.remaining_absence}}
+                        </a>
+                    {% else %}
+                        {{employee.remaining_absence}}
+                    {% endif %}
+                        
+                    </span></td>
+                    
+                    
+                    </tr>
+                    
+                </tbody>
+                {% empty %}
+                    <td class="text-center" colspan=4> هنوز اطلاعاتی ثبت نشده است</td>
+                {% endfor %}
+                
+
+            </table>
+        </div>
+        
+        
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                                                            
+  
+		
+    
+    <div class="row mx-1 d-flex justify-content-center">
+        
+        <div class="card col-3 p-0 mx-1" >
+            <div class="card-header">
+                {% comment %} {{ form.date_joined.label}} {% endcomment %}
+                تاریخ استخدام
+               
+            </div>
+            <ul class="list-group list-group-flush ">
+                {% if user.is_superuser %}
+            
+                    <li class="list-group-item "> <input class="input100  border-0  {% if form.date_joined.errors %} border border-danger {% endif %}" type="date" name="{{ form.date_joined.name }}" value={{ form.date_joined.value|date:'Y-m-d' }} ></li>
+                {% endif %}
+                {% comment %} {{form.date_joined}} {% endcomment %}
+              <li class="list-group-item mx-auto"> {{ form.date_joined.value|to_jalali:'%Y/%m/%d' }}</li>
+            </ul>
+        </div>
+        <div class="card col-3 p-0  " >
+            <div class="card-header">
+                {{ form.last_login.label|naturaltime }}
+            </div>
+            <ul class="list-group list-group-flush">
+                
+                                                                                                                                                                                                                
+                {% if user.is_superuser %}
+                    <li class="list-group-item">  <input type="datetime-local" class="input100  border-0  {% if form.last_login.errors %} border border-danger {% endif %}"  name="{{ form.last_login.name }}" value={{ form.last_login.value|date:'Y-m-d\Th:m:s' }} ></li>
+                {% endif %}
+              <li class="list-group-item mx-auto">  {{ form.last_login.value|naturaltime }}</li>
+            </ul>
+        </div>
+    </div> 
+
+    {% comment %} <div class="row">
+        <div class="col-2">
+            {{ form.date_joined|as_crispy_field}}
+        </div>
+
+        <div class="col-2">
+            
+            {{ form.last_login|as_crispy_field }}
+        </div>
+    </div> {% endcomment %}
+    
+    
+
+    {% comment %} <div class="col-12">
+       
+        {{ form.is_author|as_crispy_field }}
+    </div> {% endcomment %}
+    <div class="row mx-1 d-flex justify-content-center">
+    
+   
+    <input class="btn bg-success col-3 mx-1" type="submit" value="ذخیره">
+    
+       
+        
+    <a class="col-3 badge bg-warning align-content-center" href="{% url 'accounts:password_change' %}">   تغییر گذرواژه  </a>
+           
+    </div>
+    
+    
+    
+</form>
+
+{% endblock %}

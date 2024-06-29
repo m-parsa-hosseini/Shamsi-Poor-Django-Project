@@ -1,0 +1,30 @@
+{% extends 'registration/base.html' %}
+{% load crispy_forms_tags %}
+{% load jalali_tags %}
+{% load static %}
+{%block main%}
+
+
+<form method="post" enctype= "multipart/form-data"  >{% csrf_token %}
+    <div class="col-10">
+        {{ form.as_p }}
+    </div>
+   
+   
+
+    {% comment %} {{ form|crispy }} {% endcomment %}
+    <input type="submit" value="ذخیره">
+</form>
+
+{% endblock %}
+
+
+
+
+<!-- By default, Datepicker using jQuery, you need to set your script after loading jQuery! -->
+	<!-- loading directly -->
+		<link rel="stylesheet" href="{% static 'admin/jquery.ui.datepicker.jalali/themes/base/jquery-ui.min.css' %}">
+		<script src="{% static 'admin/js/django_jalali.min.js' %}"></script>
+	<!-- OR -->
+	<!-- loading by form (if used AdminJalaliDateWidget) -->
+		{{ form.media }}
